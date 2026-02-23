@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURE | ADMIN CONSOLE</title>
+    <link rel="icon" href="assets/icon.png" type="image/png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========== GLASS BUTTONS + DARK RED/BLACK ========== */
+        :root {
+            --bg-deep: #000000;
+            --glass-bg: rgba(8, 0, 0, 0.7);
+            --glass-card: rgba(12, 0, 0, 0.65);
+            --glass-header: rgba(5, 0, 0, 0.8);
+            --glass-input: rgba(15, 0, 0, 0.5);
+            --glass-button: rgba(180, 0, 0, 0.25);
+            --glass-button-hover: rgba(200, 0, 0, 0.4);
+            --border-glass: rgba(180, 0, 0, 0.3);
+            --border-glass-hover: rgba(220, 0, 0, 0.6);
+            --neon-red: #b30000;
+            --neon-dark: #660000;
+            --text-primary: #ffffff;
+            --text-secondary: #f0f0f0;
+            --text-muted: #cc9999;
+            --text-accent: #ffaaaa;
+            --font-main: 'Inter', sans-serif;
+            --font-display: 'Rajdhani', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Subtle Grid */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(150, 0, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(150, 0, 0, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Mouse Glow - Fixed Single Circle */
+        .glow-pointer {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(150, 0, 0, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            opacity: 0.8;
+            mix-blend-mode: screen;
+        }
+
+        /* ===== GLASS BUTTON STYLES ===== */
+        .god-btn {
+            width: 100%;
+            padding: 15px;
+            background: rgba(180, 0, 0, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: 600;
+            border-radius: 12px;
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .god-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .god-btn:hover::before {
+            left: 100%;
+        }
+
+        .god-btn:hover {
+            background: rgba(200, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(180, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Button Variants */
+        .btn-nuke {
+            background: rgba(180, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffaaaa;
+            padding: 7px 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-nuke:hover {
+            background: rgba(200, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            box-shadow: 0 8px 25px rgba(180, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .tab-btn {
+            background: rgba(30, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #cc9999;
+            padding: 10px 22px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            background: rgba(180, 0, 0, 0.35);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 8px 25px rgba(180, 0, 0, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Login Screen */
+        #admin-login {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .login-box {
+            width: 400px;
+            padding: 45px 40px;
+            background: rgba(8, 0, 0, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(180, 0, 0, 0.25);
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: var(--font-display);
+            margin-bottom: 8px;
+            color: white;
+            letter-spacing: 4px;
+            text-shadow: 0 0 15px rgba(180, 0, 0, 0.3);
+        }
+
+        .login-sub {
+            color: #cc9999;
+            font-size: 13px;
+            margin-bottom: 35px;
+            letter-spacing: 2px;
+        }
+
+        .god-input {
+            width: 100%;
+            padding: 15px 18px;
+            background: rgba(15, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(180, 0, 0, 0.25);
+            color: white;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 22px;
+            transition: all 0.2s;
+            letter-spacing: 1px;
+        }
+
+        .god-input:focus {
+            border-color: #b30000;
+            background: rgba(20, 0, 0, 0.7);
+            box-shadow: 0 0 25px rgba(180, 0, 0, 0.15);
+        }
+
+        /* Dashboard */
+        #admin-dash {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+            background: #000000;
+        }
+
+        .top-bar {
+            padding: 15px 35px;
+            background: rgba(5, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(180, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Logo Image - Static */
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            background: url('static/img.png') no-repeat center center;
+            background-size: contain;
+            display: inline-block;
+        }
+
+        .brand-title {
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 18px;
+            font-family: var(--font-display);
+            color: white;
+        }
+
+        .brand-sub {
+            font-size: 10px;
+            color: #cc9999;
+            letter-spacing: 3px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px 35px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Stats Cards */
+        .grid-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(8, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            padding: 25px;
+            border: 1px solid rgba(180, 0, 0, 0.2);
+            border-radius: 16px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(180, 0, 0, 0.4);
+            background: rgba(12, 0, 0, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.8);
+        }
+
+        .card h3 {
+            font-size: 42px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 5px;
+            font-family: var(--font-display);
+        }
+
+        .card span {
+            font-size: 11px;
+            color: #cc9999;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card i {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 48px;
+            color: #b30000;
+            opacity: 0.15;
+        }
+
+        /* Tables */
+        .table-container {
+            background: rgba(8, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(180, 0, 0, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 18px 25px;
+            border-bottom: 1px solid rgba(180, 0, 0, 0.15);
+            background: rgba(5, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+        }
+
+        .table-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: var(--font-display);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 15px 25px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #cc9999;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid rgba(180, 0, 0, 0.1);
+            background: rgba(100, 0, 0, 0.1);
+            font-family: var(--font-mono);
+        }
+
+        td {
+            padding: 15px 25px;
+            font-size: 13px;
+            color: #f0f0f0;
+            border-bottom: 1px solid rgba(180, 0, 0, 0.05);
+        }
+
+        tr:hover {
+            background: rgba(150, 0, 0, 0.1);
+        }
+
+        /* Secret Blur */
+        .secret-blur {
+            filter: blur(5px);
+            cursor: pointer;
+            color: #ffaaaa;
+            font-family: var(--font-mono);
+            transition: all 0.2s;
+            background: rgba(150, 0, 0, 0.15);
+            backdrop-filter: blur(5px);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid rgba(180, 0, 0, 0.2);
+            font-size: 12px;
+        }
+
+        .secret-blur:hover {
+            filter: blur(0);
+            background: rgba(180, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 25px rgba(180, 0, 0, 0.3);
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 10px;
+            font-weight: 600;
+            background: rgba(150, 0, 0, 0.15);
+            backdrop-filter: blur(5px);
+            color: #ffaaaa;
+            border: 1px solid rgba(180, 0, 0, 0.25);
+            border-radius: 20px;
+            margin-right: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(10, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border-left: 4px solid #b30000;
+            padding: 14px 30px;
+            color: white;
+            font-size: 13px;
+            letter-spacing: 2px;
+            border-radius: 40px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transition: 0.3s;
+            z-index: 99999;
+            border: 1px solid rgba(180, 0, 0, 0.3);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Modal */
+        #secure-modal .login-box,
+        #creds-modal .login-box,
+        #change-pass-modal .login-box,
+        #reset-app-pass-modal .login-box {
+            background: rgba(8, 0, 0, 0.95);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(180, 0, 0, 0.35);
+        }
+
+        /* Slider - Glass */
+        #slider-container {
+            border: 1px solid rgba(180, 0, 0, 0.3) !important;
+            background: rgba(20, 0, 0, 0.5) !important;
+            backdrop-filter: blur(12px) !important;
+            border-radius: 40px !important;
+            height: 55px !important;
+        }
+
+        #slider-handle {
+            background: rgba(180, 0, 0, 0.4) !important;
+            backdrop-filter: blur(15px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 40px !important;
+            width: 80px !important;
+            box-shadow: 0 0 25px rgba(180, 0, 0, 0.2) !important;
+        }
+
+        #slider-text {
+            color: #cc9999 !important;
+            font-size: 13px !important;
+            letter-spacing: 3px !important;
+        }
+
+        /* Danger Zone */
+        #danger-zone {
+            background: rgba(20, 0, 0, 0.65) !important;
+            backdrop-filter: blur(15px) !important;
+            border-left: 4px solid #b30000 !important;
+            border: 1px solid rgba(180, 0, 0, 0.25) !important;
+        }
+
+        /* Scrollbar */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: #660000;
+            border-radius: 10px;
+        }
+
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #b30000;
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        /* Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .shake {
+            animation: shake 0.4s;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mouse Glow - Fixed Single Circle -->
+    <div id="glow-pointer" class="glow-pointer"></div>
+
+    <!-- Secure Action Modal -->
+    <div id="secure-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 99999; display: flex; align-items: center; justify-content: center;">
+        <div class="login-box" style="width: 420px;">
+            <h3 class="login-title" style="color: #b30000;">CONFIRM ACTION</h3>
+            <p class="login-sub" id="secure-modal-text" style="color: #cc9999;">Please confirm this critical operation.</p>
+            
+            <div id="slider-container" style="position: relative; width: 100%; height: 55px; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <div id="slider-text" style="z-index: 1;">SLIDE TO CONFIRM</div>
+                <div id="slider-handle" style="position: absolute; left: 0; top: 0; height: 100%; cursor: grab; z-index: 2; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-chevron-right" style="color: white; font-size: 22px;"></i>
+                </div>
+            </div>
+            <button class="god-btn" style="background: rgba(50,50,50,0.3);" onclick="Admin.closeSecureModal()">CANCEL</button>
+        </div>
+    </div>
+
+    <!-- Credentials Modal -->
+    <div id="creds-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 99999; display: flex; align-items: center; justify-content: center;">
+        <div class="login-box" style="width: 480px;">
+            <h3 class="login-title" style="color: #b30000;">PREMIUM USER CREATED</h3>
+            <p class="login-sub" style="color: #cc9999;">Credentials have been generated.</p>
+            <div style="background: rgba(20,0,0,0.5); backdrop-filter: blur(10px); padding: 25px; border: 1px solid rgba(180,0,0,0.25); border-radius: 16px; text-align: left;">
+                <div style="margin-bottom: 18px;">
+                    <div style="font-size: 11px; color: #cc9999; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 2px;">Username</div>
+                    <div id="cred-user" class="secret-blur" style="user-select: all; cursor: pointer;"></div>
+                </div>
+                <div>
+                    <div style="font-size: 11px; color: #cc9999; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 2px;">Password</div>
+                    <div id="cred-pass" class="secret-blur" style="user-select: all; cursor: pointer;"></div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 30px;">
+                <button class="god-btn" style="flex: 1;" onclick="Admin.loginAsUser(document.getElementById('cred-user').innerText, document.getElementById('cred-pass').innerText)">LOGIN NOW</button>
+                <button class="god-btn" style="flex: 1; background: rgba(50,50,50,0.3);" onclick="document.getElementById('creds-modal').classList.add('hidden')">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="change-pass-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 99999; display: flex; align-items: center; justify-content: center;">
+        <div class="login-box" style="width: 380px;">
+            <h3 class="login-title" style="color: #b30000;">CHANGE PASSWORD</h3>
+            <p class="login-sub" id="cp-username-disp" style="color: #cc9999;">Target User</p>
+            <input type="hidden" id="cp-username">
+            <input type="text" id="cp-new-pass" class="god-input" placeholder="New Password">
+            <div class="flex" style="gap: 12px;">
+                <button class="god-btn" onclick="Admin.doChangePass()">UPDATE</button>
+                <button class="god-btn" style="background: rgba(50,50,50,0.3);" onclick="document.getElementById('change-pass-modal').classList.add('hidden')">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset App Password Modal -->
+    <div id="reset-app-pass-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 99999; display: flex; align-items: center; justify-content: center;">
+        <div class="login-box" style="width: 380px;">
+            <h3 class="login-title" style="color: #b30000;">RESET APP PASSWORD</h3>
+            <p class="login-sub" id="rap-owner-disp" style="color: #cc9999;">Target Application</p>
+            <input type="hidden" id="rap-owner-id">
+            <input type="text" id="rap-new-pass" class="god-input" placeholder="New Password">
+            <div class="flex" style="gap: 12px;">
+                <button class="god-btn" onclick="Admin.doResetAppPass()">UPDATE</button>
+                <button class="god-btn" style="background: rgba(50,50,50,0.3);" onclick="document.getElementById('reset-app-pass-modal').classList.add('hidden')">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">SYSTEM MESSAGE</div>
+
+    <!-- Login Screen -->
+    <div id="admin-login">
+        <div class="login-box">
+            <div class="login-title">SECURE</div>
+            <div class="login-sub">ADMINISTRATOR ACCESS</div>
+            <input type="password" id="master-key" class="god-input" placeholder="ACCESS KEY">
+            <button class="god-btn" onclick="Admin.auth()">AUTHENTICATE</button>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="admin-dash" class="hidden">
+        <div class="top-bar">
+            <div class="logo-area">
+                <!-- Static Logo - static/img.png -->
+                <div class="logo-img"></div>
+                <div>
+                    <div class="brand-title">SECURE ADMIN</div>
+                    <div class="brand-sub">ROOT ACCESS</div>
+                </div>
+            </div>
+            <button class="god-btn" style="width: auto; padding: 10px 22px; font-size: 11px; background: rgba(150,0,0,0.2);" onclick="Admin.logout()">LOGOUT</button>
+        </div>
+
+        <div class="content">
+            <!-- Stats Cards -->
+            <div class="grid-stats">
+                <div class="card">
+                    <h3 id="total-apps">--</h3>
+                    <span>TOTAL ACCOUNTS</span>
+                    <i class="fas fa-cubes"></i>
+                </div>
+                <div class="card">
+                    <h3 id="total-users">--</h3>
+                    <span>GLOBAL USERS</span>
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="card">
+                    <h3 id="db-status">ACTIVE</h3>
+                    <span>DATABASE STATUS</span>
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+            </div>
+
+            <!-- Announcement -->
+            <div class="card" style="margin-bottom: 25px; display: flex; align-items: center; gap: 20px; padding: 20px;">
+                <div style="flex: 1;">
+                    <h4 style="margin-bottom: 8px; color: #cc9999; font-size: 13px; text-transform: uppercase; letter-spacing: 2px;">Global Announcement</h4>
+                    <input type="text" id="global-msg" class="god-input" style="margin:0; text-align: left;" placeholder="Enter message for all users...">
+                </div>
+                <button class="god-btn" style="width: auto; padding: 14px 28px;" onclick="Admin.setAnnouncement()">BROADCAST</button>
+            </div>
+
+            <!-- Admin Actions -->
+            <div id="danger-zone" class="card" style="margin-bottom: 25px; display: flex; flex-wrap: wrap; align-items: center; gap: 18px; padding: 22px;">
+                <div style="flex: 1; min-width: 220px;">
+                    <h4 style="margin-bottom: 8px; color: #cc9999; font-size: 13px; text-transform: uppercase; letter-spacing: 2px;">Create Master User</h4>
+                    <input type="text" id="new-premium-name" class="god-input" style="margin:0; text-align: left;" placeholder="Account name...">
+                </div>
+                <button class="god-btn" style="width: auto;" onclick="Admin.secureAction('create_premium')">CREATE</button>
+                <div style="border-left: 1px solid rgba(180,0,0,0.25); height: 35px;"></div>
+                <button class="god-btn" style="width: auto; background: rgba(150,0,0,0.25);" onclick="Admin.backupDatabase()">BACKUP DB</button>
+                <div style="border-left: 1px solid rgba(180,0,0,0.25); height: 35px;"></div>
+                <button class="god-btn" style="width: auto; background: rgba(100,0,0,0.3);" onclick="Admin.secureAction('nuke_system')">NUKE</button>
+            </div>
+
+            <!-- Tabs -->
+            <div style="display: flex; gap: 12px; margin-bottom: 25px; flex-wrap: wrap;">
+                <button class="tab-btn active" onclick="Admin.switchTab('apps', this)">ACCOUNTS</button>
+                <button class="tab-btn" onclick="Admin.switchTab('logs', this)">SYSTEM LOGS</button>
+                <button class="tab-btn" onclick="Admin.switchTab('hwid', this)">HWID</button>
+                <button class="tab-btn" onclick="Admin.switchTab('reseller_requests', this)">RESELLER REQUESTS</button>
+                <button class="tab-btn" onclick="Admin.switchTab('resellers', this)">RESELLERS</button>
+                <button class="tab-btn" onclick="Admin.switchTab('recent', this)">RECENT</button>
+            </div>
+
+            <!-- Apps Table -->
+            <div id="view-apps">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>ACCOUNTS DATABASE</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Account Name</th>
+                                <th>Owner ID</th>
+                                <th>Secret</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Metrics</th>
+                                <th>Plan</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="app-list"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Logs Table -->
+            <div id="view-logs" class="hidden">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>SECURITY LOGS</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Type</th>
+                                <th>Message</th>
+                                <th>IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-list"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- HWID Tab -->
+            <div id="view-hwid" class="hidden">
+                <div class="table-container" style="padding: 25px;">
+                    <div class="table-header" style="margin-bottom: 20px; padding: 0; border: none;">
+                        <h2>DEVICE BAN MANAGEMENT</h2>
+                    </div>
+                    
+                    <div class="card" style="max-width: 650px; margin-bottom: 30px;">
+                        <h4 style="margin-bottom: 18px; color: #cc9999; font-size: 13px; text-transform: uppercase;">Global Device Ban / Unban</h4>
+                        <p style="color: #cc9999; font-size: 12px; margin-bottom: 22px; border-left: 4px solid #b30000; padding-left: 18px;">
+                            Permanently block a device HWID from accessing the entire system.
+                        </p>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="font-size: 11px; color: #cc9999; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Target Application</label>
+                            <select id="hwid-app-select" class="god-input" style="text-align: left;">
+                                <option value="">Global / All Applications</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <label style="font-size: 11px; color: #cc9999; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Device HWID</label>
+                            <input type="text" id="target-hwid" class="god-input" placeholder="Paste HWID here..." style="text-align: left;">
+                        </div>
+                        
+                        <div class="flex" style="gap: 18px;">
+                            <button class="god-btn" style="background: rgba(180,0,0,0.3);" onclick="Admin.hwidAction('ban')">BAN DEVICE</button>
+                            <button class="god-btn" style="background: rgba(0,100,150,0.25);" onclick="Admin.hwidAction('unban')">UNBAN DEVICE</button>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: 30px; margin-bottom: 18px; color: #cc9999; font-size: 13px; text-transform: uppercase; letter-spacing: 2px;">
+                        ACTIVE BANS (<span id="ban-count" style="color: #b30000;">0</span>)
+                    </h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>HWID Hash</th>
+                                    <th>Origin</th>
+                                    <th>Banned Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hwid-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reseller Requests Tab -->
+            <div id="view-reseller_requests" class="hidden">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>RESELLER REQUESTS</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Reseller</th>
+                                <th>Owner ID</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reseller-requests-table"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Resellers Tab -->
+            <div id="view-resellers" class="hidden">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>ACTIVE RESELLERS</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>App</th>
+                                <th>Owner ID</th>
+                                <th>Balance</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resellers-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Users Tab -->
+            <div id="view-recent" class="hidden">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>RECENT ACTIVITY</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>App</th>
+                                <th>Last Login</th>
+                                <th>IP</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-users-table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== ORIGINAL FUNCTIONS - 100% INTACT ==========
+        let ADMIN_TOKEN = "";
+        let secureActionCallback = null;
+
+        // Mouse Glow - Fixed Single Circle
+        document.addEventListener('mousemove', function(e) {
+            const glow = document.getElementById('glow-pointer');
+            if(glow) {
+                glow.style.left = e.clientX + 'px';
+                glow.style.top = e.clientY + 'px';
+            }
+        });
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // Auto Login Check
+        window.onload = () => {
+            const savedToken = localStorage.getItem('Secure_admin_token');
+            if(savedToken) {
+                ADMIN_TOKEN = savedToken;
+                document.getElementById('admin-login').classList.add('hidden');
+                document.getElementById('admin-dash').classList.remove('hidden');
+                Admin.fetch();
+            }
+        };
+
+        const Admin = {
+            auth: async () => {
+                const key = document.getElementById('master-key').value.trim();
+                try {
+                    const res = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({password: key})
+                    });
+                    const d = await res.json();
+                    if(d.success) {
+                        ADMIN_TOKEN = d.access_token;
+                        localStorage.setItem('Secure_admin_token', ADMIN_TOKEN);
+                        document.getElementById('admin-login').classList.add('hidden');
+                        document.getElementById('admin-dash').classList.remove('hidden');
+                        Admin.fetch();
+                        showToast('ACCESS GRANTED');
+                    } else {
+                        document.querySelector('#admin-login .login-box').style.border = '1px solid #b30000';
+                        document.querySelector('#admin-login .login-box').classList.add('shake');
+                        setTimeout(() => document.querySelector('#admin-login .login-box').classList.remove('shake'), 400);
+                        showToast('INVALID KEY');
+                    }
+                } catch(e) {
+                    showToast('CONNECTION FAILED');
+                }
+            },
+
+            logout: () => {
+                localStorage.removeItem('Secure_admin_token');
+                location.reload();
+            },
+
+            apiCall: async (endpoint, body = {}) => {
+                try {
+                    const res = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${ADMIN_TOKEN}`
+                        },
+                        body: JSON.stringify(body)
+                    });
+                    if(res.status === 401 || res.status === 422) {
+                        Admin.logout();
+                        return {success: false, message: 'Session Expired'};
+                    }
+                    return await res.json();
+                } catch(e) {
+                    return {success: false, message: 'Network Error'};
+                }
+            },
+
+            fetch: async () => {
+                try {
+                    const d = await Admin.apiCall('/api/admin/fetch_all');
+                    if(d.success) {
+                        document.getElementById('total-apps').innerText = d.stats?.total_apps || '0';
+                        document.getElementById('total-users').innerText = d.stats?.total_users || '0';
+
+                        const appSelect = document.getElementById('hwid-app-select');
+                        appSelect.innerHTML = '<option value="">Global / All Applications</option>';
+                        if(d.apps) {
+                            d.apps.forEach(app => {
+                                const opt = document.createElement('option');
+                                opt.value = app.owner_id;
+                                opt.innerText = `${app.name} (${app.owner_id})`;
+                                appSelect.appendChild(opt);
+                            });
+                        }
+
+                        if(d.apps) {
+                            const rows = d.apps.map(app => `
+                                <tr>
+                                    <td style="font-weight: 600; color: white;">${app.name || 'Untitled'}</td>
+                                    <td style="font-family: var(--font-mono); color: #ffaaaa;">${app.owner_id || 'N/A'}</td>
+                                    <td><span class="secret-blur" onclick="navigator.clipboard.writeText('${app.secret || ''}'); showToast('SECRET COPIED')">HIDDEN</span></td>
+                                    <td>${app.username ? `<span class="secret-blur" onclick="navigator.clipboard.writeText('${app.username}'); showToast('USERNAME COPIED')">${app.username}</span>` : '<span style="color:#666;">N/A</span>'}</td>
+                                    <td><span style="color:#666;">********</span></td>
+                                    <td><span class="badge">${app.user_count || 0} USERS</span> <span class="badge">${app.license_count || 0} KEYS</span></td>
+                                    <td><span class="badge" style="cursor:pointer; background:${app.plan=='premium'?'rgba(180,0,0,0.4)':'rgba(150,0,0,0.15)'}; color:white;" onclick="Admin.togglePlan('${app.owner_id}', '${app.plan || 'free'}')">${app.plan ? app.plan.toUpperCase() : 'FREE'}</span></td>
+                                    <td>
+                                        <div style="display: flex; gap: 8px;">
+                                            ${app.username && app.password ? `<button class="btn-nuke" onclick="Admin.loginAsUser('${app.username}', '${app.password}')"><i class="fas fa-sign-in-alt"></i></button>` : ''}
+                                            <button class="btn-nuke" onclick="Admin.openResetAppPass('${app.owner_id}', '${app.name}')"><i class="fas fa-key"></i></button>
+                                            <button class="btn-nuke" onclick="Admin.delete('${app.owner_id}')"><i class="fas fa-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('');
+                            document.getElementById('app-list').innerHTML = rows;
+                        }
+                    }
+                } catch(e) {
+                    console.error(e);
+                }
+            },
+
+            fetchLogs: async () => {
+                const d = await Admin.apiCall('/api/admin/logs');
+                if(d.success) {
+                    const rows = (d.logs || []).map(l => `
+                        <tr>
+                            <td style="color: #999;">${l.timestamp || 'N/A'}</td>
+                            <td style="color: #ffaa00;">${l.type || 'INFO'}</td>
+                            <td>${l.message || ''}</td>
+                            <td style="font-family: var(--font-mono); color: #ffaaaa;">${l.ip || '0.0.0.0'}</td>
+                        </tr>
+                    `).join('');
+                    document.getElementById('logs-list').innerHTML = rows || '<tr><td colspan="4" style="text-align:center; padding:20px;">No logs found</td></tr>';
+                }
+            },
+
+            setAnnouncement: async () => {
+                const msg = document.getElementById('global-msg').value;
+                if(!msg) return showToast('ENTER MESSAGE');
+                const d = await Admin.apiCall('/api/admin/announcement', {message: msg});
+                if(d.success) {
+                    showToast('ANNOUNCEMENT BROADCASTED');
+                    document.getElementById('global-msg').value = '';
+                }
+            },
+
+            backupDatabase: async () => {
+                try {
+                    const res = await fetch('/api/admin/backup_db', {
+                        headers: { 'Authorization': `Bearer ${ADMIN_TOKEN}` }
+                    });
+                    if(res.status === 200) {
+                        const blob = await res.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `Secure_backup_${new Date().getTime()}.db`;
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        showToast('BACKUP COMPLETE');
+                    } else showToast('BACKUP FAILED');
+                } catch(e) {
+                    showToast('DOWNLOAD ERROR');
+                }
+            },
+
+            createPremium: async () => {
+                const name = document.getElementById('new-premium-name').value;
+                if(!name) return showToast('APP NAME REQUIRED');
+
+                const d = await Admin.apiCall('/api/admin/create_premium', {name: name});
+                if(d.success) {
+                    document.getElementById('cred-user').innerText = d.username || 'premium_user';
+                    document.getElementById('cred-pass').innerText = d.password || 'SecurePass123';
+                    document.getElementById('creds-modal').classList.remove('hidden');
+                    Admin.fetch();
+                    document.getElementById('new-premium-name').value = '';
+                } else showToast(d.message || 'CREATION FAILED');
+            },
+
+            switchTab: (tab, el) => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                if(el) el.classList.add('active');
+
+                document.getElementById('view-apps').classList.add('hidden');
+                document.getElementById('view-logs').classList.add('hidden');
+                document.getElementById('view-hwid').classList.add('hidden');
+                document.getElementById('view-reseller_requests').classList.add('hidden');
+                document.getElementById('danger-zone').classList.add('hidden');
+                document.getElementById('view-recent').classList.add('hidden');
+                document.getElementById('view-resellers').classList.add('hidden');
+
+                if(tab === 'apps') {
+                    document.getElementById('view-apps').classList.remove('hidden');
+                    document.getElementById('danger-zone').classList.remove('hidden');
+                    Admin.fetch();
+                } else if(tab === 'logs') {
+                    document.getElementById('view-logs').classList.remove('hidden');
+                    Admin.fetchLogs();
+                } else if(tab === 'hwid') {
+                    document.getElementById('view-hwid').classList.remove('hidden');
+                    Admin.fetch().then(() => Admin.fetchBlacklist());
+                } else if(tab === 'reseller_requests') {
+                    document.getElementById('view-reseller_requests').classList.remove('hidden');
+                    Admin.fetchResellerRequests();
+                } else if(tab === 'resellers') {
+                    document.getElementById('view-resellers').classList.remove('hidden');
+                    Admin.fetchResellers();
+                } else if(tab === 'recent') {
+                    document.getElementById('view-recent').classList.remove('hidden');
+                    Admin.fetchRecentUsers();
+                }
+            },
+
+            fetchResellerRequests: async () => {
+                const d = await Admin.apiCall('/api/admin/reseller_requests');
+                if(d.success) {
+                    const rows = (d.requests || []).map(r => `
+                        <tr>
+                            <td style="color: #999;">${r.id || 'N/A'}</td>
+                            <td>${r.reseller_username || 'Unknown'}</td>
+                            <td style="font-family: var(--font-mono); color: #ffaaaa;">${r.owner_id || 'N/A'}</td>
+                            <td style="color: #ffaa00;">${r.amount || 0} Credits</td>
+                            <td><span class="badge" style="background: ${r.status === 'approved' ? 'rgba(0,100,0,0.3)' : r.status === 'rejected' ? 'rgba(100,0,0,0.3)' : 'rgba(100,80,0,0.3)'}; color: white;">${(r.status || 'PENDING').toUpperCase()}</span></td>
+                            <td style="color: #999;">${r.created_at || 'N/A'}</td>
+                            <td>
+                                ${(r.status || 'pending') === 'pending' ? `
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="btn-nuke" style="background: rgba(0,100,0,0.2); color: #88ff88;" onclick="Admin.approveReq(${r.id})"><i class="fas fa-check"></i></button>
+                                        <button class="btn-nuke" style="background: rgba(100,0,0,0.2); color: #ff8888;" onclick="Admin.rejectReq(${r.id})"><i class="fas fa-times"></i></button>
+                                    </div>
+                                ` : '-'}
+                            </td>
+                        </tr>
+                    `).join('');
+                    document.getElementById('reseller-requests-table').innerHTML = rows || '<tr><td colspan="7" style="text-align:center; padding:20px;">No requests found</td></tr>';
+                }
+            },
+
+            fetchResellers: async () => {
+                const d = await Admin.apiCall('/api/admin/resellers');
+                if(d.success) {
+                    const rows = (d.resellers || []).map(r => `
+                        <tr>
+                            <td>${r.username || 'N/A'}</td>
+                            <td>${r.password ? `<span class="secret-blur" onclick="navigator.clipboard.writeText('${r.password}'); showToast('PASSWORD COPIED')">${r.password}</span>` : 'N/A'}</td>
+                            <td>${r.app_name || 'Unknown'}</td>
+                            <td style="font-family: var(--font-mono); color: #ffaaaa;">${r.owner_id || 'N/A'}</td>
+                            <td style="color: #88ff88;">${r.balance || 0}</td>
+                            <td style="color: #999;">${r.created_at || 'N/A'}</td>
+                            <td><button class="btn-nuke" onclick="Admin.deleteReseller('${r.owner_id}', '${r.username}')"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                    `).join('');
+                    document.getElementById('resellers-table').innerHTML = rows || '<tr><td colspan="7" style="text-align:center; padding:20px;">No resellers found</td></tr>';
+                }
+            },
+
+            fetchRecentUsers: async () => {
+                const d = await Admin.apiCall('/api/admin/fetch_all');
+                if(d.success) {
+                    document.getElementById('recent-users-table').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color: #cc9999;">Select an app from Accounts tab to view user activity</td></tr>';
+                }
+            },
+
+            openChangePass: (username) => {
+                document.getElementById('cp-username').value = username;
+                document.getElementById('cp-username-disp').innerText = username;
+                document.getElementById('change-pass-modal').classList.remove('hidden');
+            },
+
+            doChangePass: async () => {
+                const u = document.getElementById('cp-username').value;
+                const p = document.getElementById('cp-new-pass').value;
+                if(!p) return showToast('ENTER PASSWORD');
+
+                const d = await Admin.apiCall('/api/admin/change_user_pass', {username: u, new_password: p});
+                if(d.success) {
+                    showToast('PASSWORD UPDATED');
+                    document.getElementById('change-pass-modal').classList.add('hidden');
+                    document.getElementById('cp-new-pass').value = '';
+                } else showToast(d.message || 'UPDATE FAILED');
+            },
+
+            openResetAppPass: (ownerId, name) => {
+                document.getElementById('rap-owner-id').value = ownerId;
+                document.getElementById('rap-owner-disp').innerText = name;
+                document.getElementById('reset-app-pass-modal').classList.remove('hidden');
+            },
+
+            doResetAppPass: async () => {
+                const oid = document.getElementById('rap-owner-id').value;
+                const p = document.getElementById('rap-new-pass').value;
+                if(!p) return showToast('ENTER PASSWORD');
+
+                const d = await Admin.apiCall('/api/admin/reset_app_pass', {owner_id: oid, new_password: p});
+                if(d.success) {
+                    showToast('APP PASSWORD UPDATED');
+                    document.getElementById('reset-app-pass-modal').classList.add('hidden');
+                    document.getElementById('rap-new-pass').value = '';
+                    Admin.fetch();
+                } else showToast(d.message || 'UPDATE FAILED');
+            },
+
+            deleteReseller: async (owner_id, username) => {
+                if(!confirm('Delete this reseller?')) return;
+                const d = await Admin.apiCall('/api/admin/resellers/delete', {owner_id, username});
+                if(d.success) {
+                    showToast('RESELLER DELETED');
+                    Admin.fetchResellers();
+                } else showToast(d.message || 'ERROR');
+            },
+
+            approveReq: async (id) => {
+                if(!confirm('Approve this request?')) return;
+                const d = await Admin.apiCall('/api/admin/reseller_requests/approve', {id: id});
+                if(d.success) {
+                    showToast('REQUEST APPROVED');
+                    Admin.fetchResellerRequests();
+                } else showToast(d.message || 'ERROR');
+            },
+
+            rejectReq: async (id) => {
+                if(!confirm('Reject this request?')) return;
+                const d = await Admin.apiCall('/api/admin/reseller_requests/reject', {id: id});
+                if(d.success) {
+                    showToast('REQUEST REJECTED');
+                    Admin.fetchResellerRequests();
+                } else showToast(d.message || 'ERROR');
+            },
+
+            togglePlan: async (id, currentPlan) => {
+                const newPlan = (currentPlan === 'free' || !currentPlan) ? 'premium' : 'free';
+                Admin.secureAction('toggle_plan', {id, newPlan});
+            },
+
+            _togglePlan: async (params) => {
+                const {id, newPlan} = params;
+                const d = await Admin.apiCall('/api/admin/update_plan', {owner_id: id, plan: newPlan});
+                if(d.success) {
+                    showToast(`PLAN: ${newPlan.toUpperCase()}`);
+                    Admin.fetch();
+                } else showToast(d.message || 'UPDATE FAILED');
+            },
+
+            delete: async (id) => {
+                Admin.secureAction('delete_app', id);
+            },
+
+            hwidAction: async (action) => {
+                const ownerId = document.getElementById('hwid-app-select').value;
+                const hwid = document.getElementById('target-hwid').value.trim();
+                if(!hwid) return showToast('ENTER HWID');
+
+                const d = await Admin.apiCall('/api/admin/hwid_actions', {action, owner_id: ownerId, hwid});
+                if(d.success) {
+                    showToast(`DEVICE ${action.toUpperCase()}ED`);
+                    document.getElementById('target-hwid').value = '';
+                    Admin.fetchBlacklist();
+                } else showToast(d.message || 'ERROR');
+            },
+
+            fetchBlacklist: async () => {
+                const ownerId = document.getElementById('hwid-app-select').value;
+                const d = await Admin.apiCall('/api/admin/hwid_actions', {action: 'fetch', owner_id: ownerId});
+                if(d.success) {
+                    document.getElementById('ban-count').innerText = (d.blacklist || []).length;
+                    const rows = (d.blacklist || []).map(b => `
+                        <tr>
+                            <td style="font-family: var(--font-mono); color: #ffaaaa;">${b.hwid || 'N/A'}</td>
+                            <td>${b.owner_id || 'Global'}</td>
+                            <td style="color: #999;">${b.banned_at || 'Unknown'}</td>
+                            <td><button class="btn-nuke" style="background: rgba(0,100,0,0.2); color: #88ff88;" onclick="document.getElementById('target-hwid').value='${b.hwid}'; Admin.hwidAction('unban')">UNBAN</button></td>
+                        </tr>
+                    `).join('');
+                    document.getElementById('hwid-list').innerHTML = rows || '<tr><td colspan="4" style="text-align:center; padding:20px;">No active bans</td></tr>';
+                }
+            },
+
+            secureAction: (action, params) => {
+                const modal = document.getElementById('secure-modal');
+                const text = document.getElementById('secure-modal-text');
+
+                if(action === 'delete_app') {
+                    text.innerText = 'This will permanently delete the app and all its data. This cannot be undone.';
+                    secureActionCallback = () => Admin._delete(params);
+                } else if(action === 'toggle_plan') {
+                    text.innerText = `Change subscription plan to ${params.newPlan.toUpperCase()}.`;
+                    secureActionCallback = () => Admin._togglePlan(params);
+                } else if(action === 'create_premium') {
+                    text.innerText = 'Create a new Master User Account with premium access.';
+                    secureActionCallback = () => Admin.createPremium();
+                } else if(action === 'nuke_system') {
+                    text.innerText = 'You are about to NUKE THE ENTIRE SYSTEM. All accounts, users, and licenses will be permanently deleted. This is irreversible.';
+                    secureActionCallback = () => Admin.nukeSystem();
+                }
+
+                modal.classList.remove('hidden');
+            },
+
+            closeSecureModal: () => {
+                document.getElementById('secure-modal').classList.add('hidden');
+                const handle = document.getElementById('slider-handle');
+                handle.style.left = '0px';
+                handle.style.transition = 'left 0.3s';
+                document.getElementById('slider-text').style.opacity = '1';
+                secureActionCallback = null;
+            },
+
+            _delete: async (id) => {
+                const d = await Admin.apiCall('/api/admin/delete_app', {owner_id: id});
+                if(d.success) {
+                    showToast('APPLICATION DELETED');
+                    Admin.fetch();
+                } else showToast('ERROR: ' + (d.message || 'Unknown'));
+            },
+
+            loginAsUser: (username, password) => {
+                localStorage.setItem('Secure_auth', JSON.stringify({username, password}));
+                window.open('/premium', '_blank');
+                showToast('OPENING USER DASHBOARD');
+            },
+
+            nukeSystem: async () => {
+                const d = await Admin.apiCall('/api/admin/nuke_all');
+                if(d.success) {
+                    showToast('SYSTEM DATA WIPED');
+                    setTimeout(() => Admin.fetch(), 2000);
+                } else showToast('NUKE FAILED');
+            }
+        };
+
+        // Slider Logic
+        const sliderHandle = document.getElementById('slider-handle');
+        const sliderContainer = document.getElementById('slider-container');
+        let isDragging = false;
+
+        if(sliderHandle && sliderContainer) {
+            sliderHandle.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isDragging = true;
+                sliderHandle.style.cursor = 'grabbing';
+            });
+
+            window.addEventListener('mouseup', () => {
+                if(isDragging) {
+                    isDragging = false;
+                    sliderHandle.style.cursor = 'grab';
+                    if(parseInt(sliderHandle.style.left) < sliderContainer.offsetWidth - sliderHandle.offsetWidth - 5) {
+                        sliderHandle.style.transition = 'left 0.3s';
+                        sliderHandle.style.left = '0px';
+                        document.getElementById('slider-text').style.opacity = '1';
+                    }
+                }
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if(!isDragging) return;
+                e.preventDefault();
+                const rect = sliderContainer.getBoundingClientRect();
+                let newLeft = e.clientX - rect.left - (sliderHandle.offsetWidth / 2);
+                newLeft = Math.max(0, Math.min(newLeft, sliderContainer.offsetWidth - sliderHandle.offsetWidth));
+                sliderHandle.style.transition = 'none';
+                sliderHandle.style.left = `${newLeft}px`;
+                document.getElementById('slider-text').style.opacity = 1 - (newLeft / (sliderContainer.offsetWidth / 2));
+
+                if(newLeft >= sliderContainer.offsetWidth - sliderHandle.offsetWidth - 5) {
+                    isDragging = false;
+                    if(secureActionCallback) {
+                        secureActionCallback();
+                        secureActionCallback = null;
+                    }
+                    Admin.closeSecureModal();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
